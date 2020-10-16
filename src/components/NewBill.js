@@ -16,6 +16,7 @@ export default class NewBill extends Component {
             totalCost:0
         }
     }
+
     componentDidMount = async () => {
         await this.getItemsList(); 
     }
@@ -35,7 +36,7 @@ export default class NewBill extends Component {
     addBill  = async () => {
        let  { item, quantity,cartItems,optionsList,totalCost } = this.state;
        
-       if((item == '') && (quantity === 0 || quantity === "") ){
+       if((item == '') || (quantity == 0 || quantity == "") ){
             this.setState({errMsg:"name should not empty, and price should not empty or 0"});
        }  else {
             let itemValue = optionsList.find( val =>  val._id == item);  
@@ -43,9 +44,9 @@ export default class NewBill extends Component {
             itemValue.quantity = quantity;
             totalCost += itemValue.price
             cartItems = [...cartItems,itemValue];
-            this.setState({cartItems,totalCost});
-       }
-       this.btnElement.click();
+            this.setState({cartItems,totalCost,item:'',quantity:0});
+            this.btnElement.click();
+        }
     }
     saveBills = async () => {
         const { cartItems } =  this.state;
@@ -64,6 +65,8 @@ export default class NewBill extends Component {
             } else {
                 alert("failed");
             }
+            this.setState({cartItems:[],totalCost:""});
+            this.props.billsupdate(true);
         } catch(ex) {
             console.log("Exxx",ex);
         }
@@ -73,7 +76,6 @@ export default class NewBill extends Component {
     }
     render(){
         const { errMsg ,optionsList,cartItems,quantity,totalCost} = this.state;
-        
         const list = (optionsList || []).map((item)=> {
              return (
                 <option key={item._id} value={item._id}>{item.name}</option>
@@ -81,10 +83,10 @@ export default class NewBill extends Component {
         });
         const cartList = (cartItems || []).map((item)=> {
             return (
-                <div style={{justifyContent:"space-between",border:'1px solid black'}}>
-                    <ul className="text-left" style={{display:"inline-block",listStyleType:"none"}}>
+                <div style={{justifyContent:"space-between",border:'1px solid #eee',marginBottom:'10px',padding:'5px'}}>
+                    <ul className="text-left" style={{listStyleType:"none"}}>
                         <li>{item.name}</li>
-                        <li>Quantity :{quantity}</li>
+                        <li>Quantity :{item.quantity}</li>
                     </ul>
                     <div className="text-right">
                         <span>Rs:{item.price}</span>
@@ -105,9 +107,9 @@ export default class NewBill extends Component {
                     {cartList}    
                 </div>
                 <div className="card-footer">
-                    <span>Amount : Rs {totalCost} </span>
+                    <span style={{float:'left'}}>Amount : Rs {totalCost} </span>
                     <span>Total Items: { cartItems.length > 0 ? (cartItems.length) : 0 } </span>
-                    <button type="button" onClick={this.saveBills}>Save</button>
+                    <button style={{float:'right'}} type="button" onClick={this.saveBills}>Save</button>
                 </div>
                 <div className="text-right">
                     <div id="newBillModal" className="modal fade" role="dialog">
@@ -126,11 +128,11 @@ export default class NewBill extends Component {
                                             </select>
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" className="form-control"  placeholder="Quantity" name="quantity" onChange = {(e) => { this.setState({quantity:e.target.value})}} />
+                                            <input type="text" className="form-control"  placeholder="Quantity" name="quantity" value={this.state.quantity} onChange = {(e) => { this.setState({quantity:e.target.value})}} />
                                         </div>
-                                        <p style={{color:"red",fontSize:'10px'}}>{errMsg ? errMsg : ""}</p>
-                                            <button type="button" className="btn btn-default" data-dismiss="modal" ref={btn => this.btnElement = btn}>Close</button>
+                                        <p style={{color:"red",fontSize:'10px',float:'left'}}>{errMsg ? errMsg : ""}</p>
                                             <button type="button" className="btn btn-default" onClick = {this.addBill}>Add</button>
+                                            <button type="button" className="btn btn-default" data-dismiss="modal" ref={btn => this.btnElement = btn}>Close</button>
                                     </form>   
                                 </div>
                             </div>

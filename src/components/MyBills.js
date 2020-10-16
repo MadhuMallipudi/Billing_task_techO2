@@ -1,12 +1,17 @@
 import React,{Component} from 'react';
 import axios from "axios";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 export default class MyBills extends Component {
     constructor(props){
         super(props);
         this.state ={
             mybills:[]
+        }
+    }
+
+    componentWillReceiveProps = async ({updateList}) => {
+        if(updateList){
+            await this.getItemsList();
         }
     }
     componentDidMount = async () => {
@@ -30,10 +35,8 @@ export default class MyBills extends Component {
         const { mybills} = this.state;
         
         const MyBillsList = (mybills || []).map((item,index)=> {
-           
-            return (
-
-                <div style={{justifyContent:"center",border:'1px solid black'}}>
+           return (
+                <div style={{justifyContent:"center",border:'1px solid #eee',marginBottom:'10px',padding:'5px'}}>
                     <div className="text-left">
                         <p>{`Bill`+index+1}</p>
                         <p>Date :{item.created_date}</p>

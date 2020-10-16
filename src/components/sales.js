@@ -10,9 +10,16 @@ export default class Sales extends Component {
             yearCount:0
         }
     }
+    componentWillReceiveProps = async ({updateList}) => {
+        if(updateList){
+            await this.getCounts();
+        }
+    }
     componentDidMount = async () => {
+        await this.getCounts();
+    }
+    getCounts = async () => {
         let result = await axios.get("http://localhost:3001/bills/counts");
-        console.log("result",result);
         if(result.status == 200){
             this.setState({
                 dayCount:result.data.dayCount,
@@ -22,7 +29,7 @@ export default class Sales extends Component {
         } else {
             this.setState({itemList:[]});
         } 
-    }
+    } 
 
     render(){
         const { dayCount ,monthCount, yearCount } =  this.state; 

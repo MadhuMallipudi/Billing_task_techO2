@@ -7,7 +7,7 @@ export default class Item extends Component {
         super(props);
         this.state ={
             name:"",
-            price:0,
+            price:"",
             errMsg:"",
             itemList:[]
         }
@@ -38,6 +38,7 @@ export default class Item extends Component {
             }
             this.listItem();
             this.btnElement.click();
+            this.setState({name:"",price:""});
        } catch(ex) {
            console.log("Exxx",ex);
        }
@@ -46,10 +47,9 @@ export default class Item extends Component {
         const { errMsg ,itemList} = this.state;
         const list = (itemList || [] ).map((item,index)=> {
             return (
-                    <div key={index} style={{justifyContent:"center",border:'1px solid black'}}>
+                    <div key={index} style={{justifyContent:"center",border:'1px solid #eee',marginBottom:'10px',padding:'5px'}}>
                         <div className="text-left">
                             <span>{item.name}</span>
-                            {/* <p>Sold :{item.price}</p> */}
                         </div>
                         <div className="text-right">
                             <span>Rs:{item.price}</span>
@@ -64,7 +64,7 @@ export default class Item extends Component {
                        { list }
                 </div>
                 <div className="text-right">
-                    <FontAwesomeIcon icon= {faPlusCircle} style={{marginReft: '20px',marginBottom: '20px',cursor: "pointer"}} data-toggle="modal" data-target="#myModal" />
+                    <FontAwesomeIcon icon= {faPlusCircle} style={{marginRight: '20px',marginBottom: '20px',cursor: "pointer"}} data-toggle="modal" data-target="#myModal" />
                     <div id="myModal" className="modal fade" role="dialog">
                         <div className="modal-dialog">
                             <div className="modal-content">
@@ -75,10 +75,10 @@ export default class Item extends Component {
                                 <div className="modal-body">
                                 <form>
                                     <div className="form-group">
-                                        <input type="text" className="form-control"  placeholder="Name" name="name" onChange = {(e) => { this.setState({name:e.target.value})}} />
+                                        <input type="text" className="form-control"  placeholder="Name" name="name" value={this.state.name} onChange = {(e) => { this.setState({name:e.target.value})}} />
                                     </div>
                                     <div className="form-group">
-                                        <input type="text" className="form-control"  placeholder="Price" name="price" onChange = {(e) => { this.setState({price:e.target.value})}} />
+                                        <input type="text" className="form-control"  placeholder="Price" name="price" value ={this.state.price} onChange = {(e) => { this.setState({price:e.target.value})}} />
                                     </div>
                                     <p style={{color:"red",fontSize:'10px'}}>{errMsg ? errMsg : ""}</p>
                                     <button type="button" className="btn btn-default" onClick = {this.addItem}>Add</button>
