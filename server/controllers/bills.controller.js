@@ -27,8 +27,6 @@ const bills_controller =  () => {
             let dayCount = result.filter(item => {  return moment(item.created_date).format("DD-MM-yyyy") == moment().format("DD-MM-yyyy")});
             let monthCount = result.filter(item => { return moment(item.created_date).getMonth == moment().getMonth});
             let yearCount = result.filter(item => { return moment(item.created_date).getFullYear == moment().getFullYear});
-            console.log("daycount",monthCount);
-            // let dailyCount = await getDailySales(dayCount);
             
             let dailySales = 0;
             let montlySales =0;
